@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "jquery": ">= 2.0.0",
-    "bootstrap": ">= 3.0.0"
+    "bootstrap": ">= 3.0.0",
+    "blockui": "git://github.com/sjoorm/blockui.git"
   },
   "repository": {
     "type": "git",
