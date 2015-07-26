@@ -3,7 +3,7 @@
  * @oDesk https://www.odesk.com/users/~01ad7ed1a6ade4e02e
  * @website https://sjoorm.com
  * date: 2014-06-26
- * updated: 2015-05-21
+ * updated: 2015-07-27
  */
 'use strict';
 /**
