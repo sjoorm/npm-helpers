@@ -2,14 +2,20 @@
   "name": "npm-helpers",
   "version": "0.1.0",
   "description": "JS helpers.",
-  "author": "https://github.com/sjoorm/npm-helpers/graphs/contributors",
+  "author": {
+    "name": "Alexey Tishchenko",
+    "url": "https://www.atishchenko.com"
+  },
+  "keywords": [],
+  "contributors": "https://github.com/sjoorm/npm-helpers/graphs/contributors",
+  "bugs": "https://github.com/sjoorm/npm-helpers/issues",
   "license": "MIT",
   "engines": {
     "node": ">= 0.6.0"
   },
   "dependencies": {
-    "jquery": ">= 2.0.0",
-    "bootstrap": ">= 3.0.0",
+    "jquery": ">=2.0.0",
+    "bootstrap": ">=3.0.0",
     "blockui": "git://github.com/sjoorm/blockui.git"
   },
   "repository": {
