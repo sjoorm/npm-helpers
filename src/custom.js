@@ -81,10 +81,14 @@ var Custom = function () {
             title = getMessage('success');
         }
 
-        var $modal = jQuery('div#jsModal');
-        $modal.find('h4#jsModalTitle').html(title);
-        $modal.find('div#jsModalBody').html(msg);
-        $modal.modal('show');
+        if(!jQuery.fn.modal) {
+            alert(title + '\n' + msg);
+        } else {
+            var $modal = jQuery('div#jsModal');
+            $modal.find('h4#jsModalTitle').html(title);
+            $modal.find('div#jsModalBody').html(msg);
+            $modal.modal('show');
+        }
     }
 
     /**
@@ -113,7 +117,7 @@ var Custom = function () {
 
     /**
      * Default AJAX success function
-     * @param data
+     * @param {object} data
      */
     function defaultSuccess(data) {
         if(data.success === true) {
@@ -167,14 +171,20 @@ var Custom = function () {
         });
 
         if(isValidated) {
-            $form.data('validated', true);
+            if(jQuery.blockUI) {
+                $form.data('validated', true).block({
+                    message: getMessage('processing')
+                });
+            }
 
             return true;
         } else {
+            $form.removeAttr('validated');
+
             if(event.preventDefault) {
                 event.preventDefault();
             }
-            if(!jQuery.fn.modal || event['simpleModal']) {
+            if(event['simpleModal']) {
                 alert(Custom.getMessage('pleaseCompleteAllRequiredFields'));
             } else {
                 showModalError(Custom.getMessage('pleaseCompleteAllRequiredFields'));
@@ -217,9 +227,6 @@ var Custom = function () {
         }
         if(beforeSend === null) {
             beforeSend = function() {
-                if(jQuery.blockUI) {
-                    $form.block({message: null});
-                }
                 return defaultBeforeSend(event);
             }
         }
