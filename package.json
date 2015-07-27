@@ -1,6 +1,6 @@
 {
   "name": "npm-helpers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JS helpers.",
   "author": {
     "name": "Alexey Tishchenko",
@@ -13,7 +13,7 @@
   "engines": {
     "node": ">= 0.6.0"
   },
-  "dependencies": {
+  "devDependencies": {
     "jquery": ">=2.0.0",
     "bootstrap": ">=3.0.0",
     "blockui": "git://github.com/sjoorm/blockui.git"
