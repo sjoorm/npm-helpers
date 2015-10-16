@@ -9,7 +9,7 @@
 /**
  * Class Custom is a custom HTML, jQuery and Bootstrap helper
  */
-var Custom = function () {
+var Custom = function() {
 
     /**
      * Handles `click` event for jsNoClick-classed &lt;a&gt; tags

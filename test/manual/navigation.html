@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Navigation.js</title>
+    <script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../../src/custom.js"></script>
+    <script type="text/javascript" src="../../src/navigation.js"></script>
+    <script>
+        function drawButtons() {
+            var hash = navigation.getHash();
+            jQuery('button[data-to-hash]')
+                    .css('background', '#ababab')
+                    .filter('button[data-to-hash="#' + hash + '"]')
+                    .css('background', '#ededed');
+        }
+
+        var navigation = Navigation([
+            {
+                hash: 'first',
+                up: function() {
+                    return true;
+                },
+                down: function() {
+                    // do not allow
+                    return false;
+                },
+                allow: [1]
+            },
+            {
+                hash: 'second',
+                up: function() {
+                    // your logic here
+                    return true;
+                },
+                down: function() {
+                    // your logic here
+                    return true;
+                },
+                allow: [1,2]
+            },
+            {
+                hash: 'third',
+                up: function() {
+                    // do not allow
+                    return false;
+                },
+                down: function() {
+                    // your logic here
+                    return false;
+                },
+                allow: [2]
+            }
+        ], drawButtons);
+        navigation.init();
+
+        jQuery(document).on('click', '#jsUp', null, function() {navigation.next();});
+        jQuery(document).on('click', '#jsDown', null, function() {navigation.prev();});
+        jQuery(document).on('click', 'button[data-to-hash]', null, function() {
+            var hash = jQuery(this).data('to-hash');
+            navigation.setHash(hash);
+        });
+    </script>
+</head>
+<body>
+<p>
+    <button id="jsUp">UP</button>
+    <button id="jsDown">DOWN</button>
+</p>
+<p>
+    <button data-to-hash="#first">to first</button>
+    <button data-to-hash="#second">to second</button>
+    <button data-to-hash="#third">to third</button>
+</p>
+<div data-hash="first">FIRST BOX</div>
+<div data-hash="second" style="display: none;">SECOND BOX</div>
+<div data-hash="third" style="display: none;">THIRD BOX</div>
+</body>
+</html>
