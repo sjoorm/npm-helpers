@@ -156,8 +156,6 @@ var Navigation = function(pages, callbackAfter) {
             window.onhashchange = function() {
                 var hash = window.location.hash.substr(1, window.location.hash.length-1),
                     position = getIndex(hash);
-                console.log(hash);
-                console.log(position);
 
                 if(position > current) {
                     while(position > current) {
