@@ -11,7 +11,7 @@
 /**
  * Formatter component used for printing money in configured format
  * @param {object} [configCustom]
- * @returns {{money: money}}
+ * @returns {{money: function}}
  * @constructor
  */
 var Formatter = function(configCustom) {
@@ -71,22 +71,21 @@ var Formatter = function(configCustom) {
             .replace('xxx', x+'').replace('yy', y+'').replace('zz', z.substring(2,4));
     }
 
-    /**
-     * Prints money value according to pre-configured format
-     * @param {float|int} value
-     * @param {string} [currency]
-     * @returns {String}
-     */
-    function money(value, currency) {
-        if(typeof(currency) === 'undefined') {
-            currency = config.money.currency;
-        }
-
-        return (value > 1000 ? moneyBig(value) : moneySmall(value))
-            .replace('C', currency);
-    }
-
     return {
-        money: money
+
+        /**
+         * Prints money value according to pre-configured format
+         * @param {float|int} value
+         * @param {string} [currency]
+         * @returns {String}
+         */
+        money: function(value, currency) {
+            if(typeof(currency) === 'undefined') {
+                currency = config.money.currency;
+            }
+
+            return (value > 1000 ? moneyBig(value) : moneySmall(value))
+                .replace('C', currency);
+        }
     }
 };

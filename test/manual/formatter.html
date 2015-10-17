@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Formatter.js</title>
+    <script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../../src/formatter.js"></script>
+    <script>
+        var formatterDefault = Formatter();
+        var formatterCustom = Formatter({
+            money: {
+                currency: '€',
+                small: '999.00 C',
+                big: '88 999.00 C'
+            }
+        });
+
+        console.log(formatterDefault.money(123.45));
+        console.assert(formatterDefault.money(123.45) === '$123,45', 'Default small');
+        console.log(formatterDefault.money(89123.45));
+        console.assert(formatterDefault.money(89123.45) === '$89.123,45', 'Default big');
+        console.log(formatterDefault.money(123.45, 'EUR'));
+        console.assert(formatterDefault.money(123.45, 'EUR') === 'EUR123,45', 'Default small Euro');
+        console.log(formatterDefault.money(89123.45, 'EUR'));
+        console.assert(formatterDefault.money(89123.45, 'EUR') === 'EUR89.123,45', 'Default big Euro');
+
+        console.log(formatterCustom.money(123.45));
+        console.assert(formatterCustom.money(123.45) === '123.45 €', 'Custom small');
+        console.log(formatterCustom.money(89123.45));
+        console.assert(formatterCustom.money(89123.45) === '89 123.45 €', 'Custom big');
+        console.log(formatterCustom.money(123.45, 'EUR'));
+        console.assert(formatterCustom.money(123.45, 'EUR') === '123.45 EUR', 'Custom small Euro');
+        console.log(formatterCustom.money(89123.45, 'EUR'));
+        console.assert(formatterCustom.money(89123.45, 'EUR') === '89 123.45 EUR', 'Custom big Euro');
+    </script>
+</head>
+<body>
+<p>Check browser console</p>
+</body>
+</html>
