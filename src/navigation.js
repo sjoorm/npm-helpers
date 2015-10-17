@@ -9,8 +9,8 @@
 'use strict';
 
 /**
- * Browser hash-based navigation helper. Check default "config" value for details.
- * @param {object} [pages]
+ * Browser hash-based navigation helper. Check navigation.html "config" value for details.
+ * @param {object} pages
  * @param {function} [callbackAfter]
  * @returns {{next: next, prev: prev, setHash: setHash}}
  * @constructor
@@ -19,44 +19,7 @@ var Navigation = function(pages, callbackAfter) {
 
     var initialized = false,
         afterSetHash = function(){},
-        config = [
-            {
-                hash: 'first',
-                up: function() {
-                    // your logic here
-                    return true;
-                },
-                down: function() {
-                    // do not allow
-                    return false;
-                },
-                allow: [1]
-            },
-            {
-                hash: 'second',
-                up: function() {
-                    // your logic here
-                    return true;
-                },
-                down: function() {
-                    // your logic here
-                    return true;
-                },
-                allow: [2]
-            },
-            {
-                hash: 'third',
-                up: function() {
-                    // do not allow
-                    return false;
-                },
-                down: function() {
-                    // your logic here
-                    return false;
-                },
-                allow: []
-            }
-        ],
+        config = [],
         current = 0;
 
     /**
@@ -82,23 +45,23 @@ var Navigation = function(pages, callbackAfter) {
      * @returns {boolean}
      */
     function isAllowed(from, to) {
-        return config[to].allow.indexOf(from) !== -1;
+        return from === to || config[to].allow.indexOf(from) !== -1;
     }
 
     /**
      * Sets breadcrumbs to selected state(hash)
      * @param {string} hash
-     * @param {boolean} [checkAllow]
+     * @param {boolean} [checkIfAllowed]
      */
-    function setHash(hash, checkAllow) {
+    function setHash(hash, checkIfAllowed) {
         hash = hash.replace('#', '');
         var to = getIndex(hash);
 
         // check for allowance
-        if(typeof(checkAllow) === 'undefined') {
-            checkAllow = true;
+        if(typeof(checkIfAllowed) === 'undefined') {
+            checkIfAllowed = true;
         }
-        if(checkAllow && !isAllowed(current, to)) {
+        if(checkIfAllowed && !isAllowed(current, to)) {
             return;
         }
 
@@ -140,9 +103,7 @@ var Navigation = function(pages, callbackAfter) {
     }
 
     // Initialise Navigation config
-    if(typeof(pages) === 'object') {
-        config = pages;
-    }
+    config = pages;
     if(typeof(callbackAfter) === 'function') {
         afterSetHash = callbackAfter;
     }
