@@ -49,10 +49,11 @@ var Logger = function(logging) {
         /**
          * Adds log line with given message, preceded with corresponding log level mark
          * @param {string} message
+         * @returns {Logger}
          */
         log: function(message) {
             if(!enabled) {
-                return;
+                return this;
             }
             if(level < 0) {
                 this.up();
@@ -70,6 +71,7 @@ var Logger = function(logging) {
 
         /**
          * Increases Logger log level
+         * @returns {Logger}
          */
         up: function() {
             ++level;
@@ -80,6 +82,7 @@ var Logger = function(logging) {
 
         /**
          * Decreases Logger log level
+         * @returns {Logger}
          */
         down: function() {
             duration[level] = timestamp() - duration[level];
@@ -92,6 +95,7 @@ var Logger = function(logging) {
          * Logs execution of passed callback wrapping it in BEGIN and END messages
          * @param {string} message
          * @param {function} callback
+         * @returns {Logger}
          */
         wrap: function(message, callback) {
             this.up().log('BEGIN ' + message);
