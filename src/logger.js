@@ -11,7 +11,7 @@
 /**
  * Custom logger class
  * @param {boolean} [logging]
- * @returns {{log: log, levelUp: levelUp, levelDown: levelDown}}
+ * @returns {{log: function, up: function, down: function, wrap: function}}
  * @constructor
  */
 var Logger = function(logging) {
@@ -34,22 +34,6 @@ var Logger = function(logging) {
     }
 
     /**
-     * Increases log level up
-     */
-    function levelUp() {
-        ++level;
-        duration[level] = timestamp();
-    }
-
-    /**
-     * Decreases log level down
-     */
-    function levelDown() {
-        duration[level] = timestamp() - duration[level];
-        --level;
-    }
-
-    /**
      * Gets passed seconds amount (on specified level)
      * @param {number} index
      * @returns {number}
@@ -60,29 +44,59 @@ var Logger = function(logging) {
             (timestamp() - duration[index]);
     }
 
-    /**
-     * Adds log line with given message, preceded with corresponding log level mark
-     * @param {string} message
-     */
-    function log(message) {
-        if(!enabled) {
-            return;
-        }
-        if(level < 0) {
-            levelUp();
-        }
-
-        var indent = '';
-        for(var i = 0; i < level; ++i) {
-            indent = indent + '-';
-        }
-
-        console.log((level ? (indent + ' ') : '') + message + ' [+' + seconds(level) + ' ms.]')
-    }
-
     return {
-        log: log,
-        levelUp: levelUp,
-        levelDown: levelDown
+
+        /**
+         * Adds log line with given message, preceded with corresponding log level mark
+         * @param {string} message
+         */
+        log: function(message) {
+            if(!enabled) {
+                return;
+            }
+            if(level < 0) {
+                this.up();
+            }
+
+            var indent = '';
+            for(var i = 0; i < level; ++i) {
+                indent = indent + '-';
+            }
+
+            console.log((level ? (indent + ' ') : '') + message + ' [+' + seconds(level) + ' ms.]');
+
+            return this;
+        },
+
+        /**
+         * Increases Logger log level
+         */
+        up: function() {
+            ++level;
+            duration[level] = timestamp();
+
+            return this;
+        },
+
+        /**
+         * Decreases Logger log level
+         */
+        down: function() {
+            duration[level] = timestamp() - duration[level];
+            --level;
+
+            return this;
+        },
+
+        /**
+         * Logs execution of passed callback wrapping it in BEGIN and END messages
+         * @param {string} message
+         * @param {function} callback
+         */
+        wrap: function(message, callback) {
+            this.up().log('BEGIN ' + message);
+            callback();
+            return this.log('END ' + message).down();
+        }
     };
 };

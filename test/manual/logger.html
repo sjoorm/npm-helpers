@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logger.js</title>
+    <script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="../../src/logger.js"></script>
+    <script>
+        var logger = Logger(true);
+
+        logger.log('Testing begins...');
+
+        logger.up().log('manual level up');
+
+        alert('We are on level 1 now');
+
+        logger.wrap('wrapped level 2', function() {alert('Wrapped level 2!');});
+
+        logger.log('and manual level down').down();
+
+        logger.log('Testing ends...');
+    </script>
+</head>
+<body>
+<p>Check browser console</p>
+</body>
+</html>
