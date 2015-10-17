@@ -39,163 +39,6 @@ var Custom = function() {
     }
 
     /**
-     * Gets message JS param
-     * @param {string} key
-     * @returns {*}
-     */
-    function getMessage(key) {
-        return (typeof(window['pageMessages']) !== 'undefined') &&
-        typeof(window['pageMessages'][key]) !== 'undefined' ?
-            window['pageMessages'][key] : key;
-    }
-
-    /**
-     * Gets variable JS param
-     * @param {string} key
-     * @returns {*}
-     */
-    function getVar(key) {
-        return (typeof(window['pageVariables']) !== 'undefined') &&
-        typeof(window['pageVariables'][key]) !== 'undefined' ?
-            window['pageVariables'][key] : key;
-    }
-
-    /**
-     * Gets URL JS param
-     * @param {string} key
-     * @returns {*}
-     */
-    function getUrl(key) {
-        return (typeof(window['pageUrls']) !== 'undefined') &&
-        typeof(window['pageUrls'][key]) !== 'undefined' ?
-            window['pageUrls'][key] : key;
-    }
-
-    /**
-     * Displays bootstrap modal window with specified title and body texts
-     * @param {string} title title of the modal window
-     * @param {string} msg body text of the modal window
-     */
-    function showModalMessage(title, msg) {
-        if(typeof(title) === 'undefined') {
-            title = getMessage('success');
-        }
-
-        if(!jQuery.fn.modal) {
-            alert(title + '\n' + msg);
-        } else {
-            var $modal = jQuery('div#jsModal');
-            $modal.find('h4#jsModalTitle').html(title);
-            $modal.find('div#jsModalBody').html(msg);
-            $modal.modal('show');
-        }
-    }
-
-    /**
-     * Shorthand method for showModalMessage() with "success" header
-     * @param {string} [msg] {string}
-     */
-    function showModalSuccess(msg) {
-        if(typeof(msg) === 'undefined') {
-            msg = getMessage('success');
-        }
-
-        showModalMessage(getMessage('success'), msg);
-    }
-
-    /**
-     * Shorthand method for showModalMessage() with "error" header
-     * @param {string} [msg]
-     */
-    function showModalError(msg) {
-        if(typeof(msg) === 'undefined') {
-            msg = getMessage('internalError');
-        }
-
-        showModalMessage(getMessage('error'), msg);
-    }
-
-    /**
-     * Default AJAX success function
-     * @param {object} data
-     */
-    function defaultSuccess(data) {
-        if(data.success === true) {
-            showModalSuccess(data.message);
-        } else {
-            showModalError(data.message);
-        }
-    }
-
-    /**
-     * Default AJAX success function
-     * @param {XMLHttpRequest} XHR
-     */
-    function defaultError(XHR) {
-        var json = JSON.parse(XHR.responseText);
-        if(json && json.message) {
-            showModalError(json.message);
-        } else {
-            showModalError();
-        }
-    }
-
-    /**
-     * Default AJAX beforeSend function
-     * @param {Event|Object} event
-     */
-    function defaultBeforeSend(event) {
-        var isValidated = true,
-            $form = jQuery(event.target);
-
-        if(window['noNeedToValidate']) {
-            return true;
-        }
-
-        $form.find('[required]').each(function(index, element) {
-            var $element = jQuery(element);
-            if(!$element.val()) {
-                isValidated = false;
-                $element
-                    .parents('div.form-group')
-                    .first()
-                    .removeClass('has-success')
-                    .addClass('has-error');
-            } else {
-                $element
-                    .parents('div.form-group')
-                    .first()
-                    .removeClass('has-error')
-                    .addClass('has-success');
-            }
-        });
-
-        if(isValidated) {
-            if(jQuery.blockUI) {
-                $form.data('validated', true).block({
-                    message: getMessage('processing')
-                });
-            }
-
-            return true;
-        } else {
-            $form.removeAttr('validated');
-
-            if(event.preventDefault) {
-                event.preventDefault();
-            }
-            if(event['simpleModal']) {
-                alert(Custom.getMessage('pleaseCompleteAllRequiredFields'));
-            } else {
-                showModalError(Custom.getMessage('pleaseCompleteAllRequiredFields'));
-            }
-            scrollTo($form);
-
-            return false;
-        }
-    }
-
-    /**
      * Submits specified form through AJAX request
      * @param {jQuery} $form
      * @param {Event|object} event
@@ -220,14 +63,14 @@ var Custom = function() {
             }
         }
         if(success === null) {
-            success = defaultSuccess;
+            success = this.defaultSuccess;
         }
         if(error === null) {
-            error = defaultError;
+            error = this.defaultError;
         }
         if(beforeSend === null) {
             beforeSend = function() {
-                return defaultBeforeSend(event);
+                return this.defaultBeforeSend(event);
             }
         }
         if(complete === null) {
@@ -250,26 +93,10 @@ var Custom = function() {
         });
     }
 
-    /**
-     * Scrolls page to specified target
-     * @param {jQuery} $target
-     * @param {int} [duration]
-     */
-    function scrollTo($target, duration) {
-        if(!$target.length) {
-            return;
-        }
-
-        if(typeof(duration) === 'undefined') {
-            duration = 800;
-        }
-
-        jQuery('html, body').animate({scrollTop: $target.offset().top}, duration);
-    }
-
     return {
+
         /**
-         * Initializes helper basic functionality
+         * Initialises handlers
          */
         init: function () {
             handleNoClick();
@@ -287,22 +114,178 @@ var Custom = function() {
             return false;
         },
 
-        showModalMessage: showModalMessage,
+        /**
+         * Displays bootstrap modal window with specified title and body texts
+         * @param {string} title title of the modal window
+         * @param {string} msg body text of the modal window
+         */
+        showModalMessage: function(title, msg) {
+            if(typeof(title) === 'undefined') {
+                title = this.getMessage('success');
+            }
 
-        showModalSuccess: showModalSuccess,
+            if(!jQuery.fn.modal) {
+                alert(title + '\n' + msg);
+            } else {
+                var $modal = jQuery('div#jsModal');
+                $modal.find('h4#jsModalTitle').html(title);
+                $modal.find('div#jsModalBody').html(msg);
+                $modal.modal('show');
+            }
+        },
 
-        showModalError: showModalError,
+        /**
+         * Shorthand method for showModalMessage() with "success" header
+         * @param {string} [msg] {string}
+         */
+        showModalSuccess: function(msg) {
+            if(typeof(msg) === 'undefined') {
+                msg = this.getMessage('success');
+            }
 
-        getMessage: getMessage,
+            this.showModalMessage(this.getMessage('success'), msg);
+        },
 
-        getVar: getVar,
+        /**
+         * Shorthand method for showModalMessage() with "error" header
+         * @param {string} [msg]
+         */
+        showModalError: function(msg) {
+            if(typeof(msg) === 'undefined') {
+                msg = this.getMessage('internalError');
+            }
 
-        getUrl: getUrl,
+            this.showModalMessage(this.getMessage('error'), msg);
+        },
 
-        scrollTo: scrollTo,
+        /**
+         * Gets message JS param
+         * @param {string} key
+         * @returns {string}
+         */
+        getMessage: function(key) {
+            return (typeof(window['pageMessages']) !== 'undefined') &&
+            typeof(window['pageMessages'][key]) !== 'undefined' ?
+                window['pageMessages'][key] : key;
+        },
 
-        defaultBeforeSend: defaultBeforeSend,
+        /**
+         * Gets variable JS param
+         * @param {string} key
+         * @returns {*}
+         */
+        getVar: function(key) {
+            return (typeof(window['pageVariables']) !== 'undefined') &&
+            typeof(window['pageVariables'][key]) !== 'undefined' ?
+                window['pageVariables'][key] : key;
+        },
 
-        defaultError: defaultError
+        /**
+         * Gets URL JS param
+         * @param {string} key
+         * @returns {string}
+         */
+        getUrl: function(key) {
+            return (typeof(window['pageUrls']) !== 'undefined') &&
+            typeof(window['pageUrls'][key]) !== 'undefined' ?
+                window['pageUrls'][key] : key;
+        },
+
+        /**
+         * Scrolls page to specified target
+         * @param {jQuery} $target
+         * @param {int} [duration]
+         */
+        scrollTo: function($target, duration) {
+            if(!$target.length) {
+                return;
+            }
+
+            if(typeof(duration) === 'undefined') {
+                duration = 800;
+            }
+
+            jQuery('html, body').animate({scrollTop: $target.offset().top}, duration);
+        },
+
+        /**
+         * Default AJAX beforeSend function
+         * @param {Event|Object} event
+         */
+        defaultBeforeSend: function(event) {
+            var isValidated = true,
+                $form = jQuery(event.target);
+
+            if(window['noNeedToValidate']) {
+                return true;
+            }
+
+            $form.find('[required]').each(function(index, element) {
+                var $element = jQuery(element);
+                if(!$element.val()) {
+                    isValidated = false;
+                    $element
+                        .parents('div.form-group')
+                        .first()
+                        .removeClass('has-success')
+                        .addClass('has-error');
+                } else {
+                    $element
+                        .parents('div.form-group')
+                        .first()
+                        .removeClass('has-error')
+                        .addClass('has-success');
+                }
+            });
+
+            if(isValidated) {
+                if(jQuery.blockUI) {
+                    $form.data('validated', true).block({
+                        message: this.getMessage('processing')
+                    });
+                }
+
+                return true;
+            } else {
+                $form.removeAttr('validated');
+
+                if(event.preventDefault) {
+                    event.preventDefault();
+                }
+                if(event['simpleModal']) {
+                    alert(this.getMessage('pleaseCompleteAllRequiredFields'));
+                } else {
+                    this.showModalError(this.getMessage('pleaseCompleteAllRequiredFields'));
+                }
+                this.scrollTo($form);
+
+                return false;
+            }
+        },
+
+        /**
+         * Default AJAX success function
+         * @param {object} data
+         */
+        defaultSuccess: function(data) {
+            if(data.success === true) {
+                this.showModalSuccess(data.message);
+            } else {
+                this.showModalError(data.message);
+            }
+        },
+
+        /**
+         * Default AJAX success function
+         * @param {XMLHttpRequest} XHR
+         */
+        defaultError: function(XHR) {
+            var json = JSON.parse(XHR.responseText);
+            if(json && json.message) {
+                this.showModalError(json.message);
+            } else {
+                this.showModalError();
+            }
+        }
     }
 }();
