@@ -63,14 +63,14 @@ var Custom = function() {
             }
         }
         if(success === null) {
-            success = this.defaultSuccess;
+            success = Custom.defaultSuccess;
         }
         if(error === null) {
-            error = this.defaultError;
+            error = Custom.defaultError;
         }
         if(beforeSend === null) {
             beforeSend = function() {
-                return this.defaultBeforeSend(event);
+                return Custom.defaultBeforeSend(event);
             }
         }
         if(complete === null) {
@@ -121,7 +121,7 @@ var Custom = function() {
          */
         showModalMessage: function(title, msg) {
             if(typeof(title) === 'undefined') {
-                title = this.getMessage('success');
+                title = Custom.getMessage('success');
             }
 
             if(!jQuery.fn.modal) {
@@ -140,10 +140,10 @@ var Custom = function() {
          */
         showModalSuccess: function(msg) {
             if(typeof(msg) === 'undefined') {
-                msg = this.getMessage('success');
+                msg = Custom.getMessage('success');
             }
 
-            this.showModalMessage(this.getMessage('success'), msg);
+            Custom.showModalMessage(Custom.getMessage('success'), msg);
         },
 
         /**
@@ -152,10 +152,10 @@ var Custom = function() {
          */
         showModalError: function(msg) {
             if(typeof(msg) === 'undefined') {
-                msg = this.getMessage('internalError');
+                msg = Custom.getMessage('internalError');
             }
 
-            this.showModalMessage(this.getMessage('error'), msg);
+            Custom.showModalMessage(Custom.getMessage('error'), msg);
         },
 
         /**
@@ -241,7 +241,7 @@ var Custom = function() {
             if(isValidated) {
                 if(jQuery.blockUI) {
                     $form.data('validated', true).block({
-                        message: this.getMessage('processing')
+                        message: Custom.getMessage('processing')
                     });
                 }
 
@@ -253,11 +253,11 @@ var Custom = function() {
                     event.preventDefault();
                 }
                 if(event['simpleModal']) {
-                    alert(this.getMessage('pleaseCompleteAllRequiredFields'));
+                    alert(Custom.getMessage('pleaseCompleteAllRequiredFields'));
                 } else {
-                    this.showModalError(this.getMessage('pleaseCompleteAllRequiredFields'));
+                    Custom.showModalError(Custom.getMessage('pleaseCompleteAllRequiredFields'));
                 }
-                this.scrollTo($form);
+                Custom.scrollTo($form);
 
                 return false;
             }
@@ -269,9 +269,9 @@ var Custom = function() {
          */
         defaultSuccess: function(data) {
             if(data.success === true) {
-                this.showModalSuccess(data.message);
+                Custom.showModalSuccess(data.message);
             } else {
-                this.showModalError(data.message);
+                Custom.showModalError(data.message);
             }
         },
 
@@ -282,9 +282,9 @@ var Custom = function() {
         defaultError: function(XHR) {
             var json = JSON.parse(XHR.responseText);
             if(json && json.message) {
-                this.showModalError(json.message);
+                Custom.showModalError(json.message);
             } else {
-                this.showModalError();
+                Custom.showModalError();
             }
         }
     }
