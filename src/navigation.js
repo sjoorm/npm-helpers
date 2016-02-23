@@ -120,7 +120,7 @@ var Navigation = function(pages, callbackAfter) {
 
             // jump
             current = to;
-            window.history.pushState(hash, hash, '#' + hash);
+            window.history.replaceState(hash, hash, '#' + hash);
 
             // draw current page block
             jQuery('[data-hash]').each(function(index, element) {
