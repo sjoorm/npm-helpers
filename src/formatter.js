@@ -46,7 +46,7 @@ var Formatter = function(configCustom) {
     function moneySmall(value) {
         var template = config.money.small;
         var x = parseInt(value),
-            z = parseFloat(value) - x;
+            z = value - x;
         z = z.toFixed(2);
         return template
             .replace('999', 'xxx').replace('00', 'zz')
@@ -60,7 +60,7 @@ var Formatter = function(configCustom) {
      */
     function moneyBig(value) {
         var template = config.money.big;
-        var z = parseFloat(value) - parseInt(value);
+        var z = value - parseInt(value);
         value = parseInt(value);
         var x = value % 1000,
             y = (value - (value % 1000)) / 1000;
@@ -75,7 +75,7 @@ var Formatter = function(configCustom) {
 
         /**
          * Prints money value according to pre-configured format
-         * @param {float|int} value
+         * @param {float|int|string} value
          * @param {string} [currency]
          * @returns {String}
          */
@@ -83,6 +83,8 @@ var Formatter = function(configCustom) {
             if(typeof(currency) === 'undefined') {
                 currency = config.money.currency;
             }
+
+            value = parseFloat(value).toFixed(2);
 
             return (value > 1000 ? moneyBig(value) : moneySmall(value))
                 .replace('C', currency);
