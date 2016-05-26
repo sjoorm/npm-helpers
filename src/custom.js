@@ -224,7 +224,7 @@ var Custom = function() {
                 var $element = jQuery(element);
                 if(
                     !$element.val() ||
-                    !(['radio', 'checkbox'].indexOf($element.attr('type')) > -1 && $element.is(':checked'))
+                    (['radio', 'checkbox'].indexOf($element.attr('type')) > -1 && !$element.is(':checked'))
                 ) {
                     isValidated = false;
                     $element
