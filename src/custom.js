@@ -222,7 +222,10 @@ var Custom = function() {
 
             $form.find('[required]').each(function(index, element) {
                 var $element = jQuery(element);
-                if(!$element.val()) {
+                if(
+                    !$element.val() ||
+                    !(['radio', 'checkbox'].indexOf($element.attr('type')) > -1 && $element.is(':checked'))
+                ) {
                     isValidated = false;
                     $element
                         .parents('div.form-group')
